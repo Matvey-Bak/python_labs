@@ -6,7 +6,7 @@ Name = input()
 Age = int(input())
 print("Привет,", Name + "!" ,"Через год тебе будет", Age + 1, end = ".")
 ```
-![alt text](src/lab01/images/ex01.png)
+![alt text](<images/lab_01/ex1 .png>)
 
 # Задание №2
 ```python
@@ -17,7 +17,7 @@ avg = (a + b) / 2
 print(sum)
 print(avg)
 ```
-![alt text](src/lab01/images/ex02.png)
+![alt text](images/lab_01/ex02.png)
 # Задание №3
 ```python
 price = int(input())
@@ -30,20 +30,20 @@ print("База после скидки:", f"{base:.2f}")
 print("НДС:", f"{vat_amount:.2f}")
 print("Итого к оплате:", f"{total:.2f}")
 ```
-![alt text](src/lab01/images/ex03.png)
+![alt text](images/lab_01/ex03.png)
 # Задание №4
 ```python
 minutes = int(input())
 print(minutes // 60, ":",minutes % 60, sep = "")
 ```
-![alt text](src/lab01/images/ex04.png)
+![alt text](images/lab_01/ex04.png)
 # Задание №5
 ```python
 a, b, c = input(), input(), input()
 print("Инициалы:", a[0], b[0],c[0],sep = "")
 print("Длина:", len(a + b + c), sep = "")
 ```
-![alt text](src/lab01/images/ex05.png)
+![alt text](images/lab_01/ex05.png)
 
 # Задание №7 
 ```python
@@ -68,4 +68,4 @@ for k in range(0, len(g), razn):
     m += g[k]
 print(m)
 ```
-![alt text](src/lab01/images/ex07.png)
+![alt text](images/lab_01/ex07.png)
