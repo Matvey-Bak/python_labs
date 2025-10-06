@@ -70,3 +70,170 @@ for k in range(0, len(g), razn):
 print(m)
 ```
 ![alt text](images/lab_01/ex07.png)
+
+
+# Лабораторная работа №2
+ Задание №1
+```python
+def min_max(nums: list[float | int]) -> tuple[float | int, float | int]:
+    if len(nums) == 0:
+        return ("ValueError")
+    else:
+        return min(nums), max(nums)
+
+print(min_max([3, -1, 5, 5, 0]))
+print(min_max([]))
+print(min_max([-5, -2, -9]))
+```
+![alt text](images/lab_02/ex01.png)
+
+ Задание №2
+``` python
+def unique_sorted(nums: list[float | int]) -> list[float | int]:
+    if len(nums) == 0:
+        return nums
+    else:
+        mnojestvo = set(nums)
+        mnojestvo = sorted(mnojestvo)
+        return mnojestvo
+    
+print(unique_sorted([3, 1, 2, 1, 3]))
+print(unique_sorted([]))
+print(unique_sorted([-1, -1, 0, 2, 2]))
+```
+![alt text](images/lab_02/ex02.png)
+
+Задание №3
+```python
+def flatten(mat: list[list | tuple]) -> list:
+    sp = []
+    for i in mat:
+        if not isinstance(i, (list, tuple)):
+            return "TypeError"
+        else:
+            sp.extend(i)    
+    return sp
+
+print(flatten([[1, 2], [3, 4]]))
+print(flatten([[1, 2], (3, 4, 5)]))
+print(flatten([[1], [], [2, 3]]))
+print(flatten([[1, 2], "ab"]))
+```
+![alt text](images/lab_02/ex03.png)
+
+Задание №4
+```python
+def transpose(mat: list[list[float | int]]):
+    if len(mat) == 0:
+        return []
+    
+    dlina = len(mat[0])
+    for i in range(0, len(mat)):
+        if dlina != len(mat[i]):
+            return "ValueError"
+        
+    col_strok = len(mat)
+    col_stolb = len(mat[0])
+
+    novaimatr = []
+
+    for index_stolb in range(col_stolb):
+        nov_strok = []
+        for index_strok in range(col_strok):
+            nov_strok.append(mat[index_strok][index_stolb])
+        novaimatr.append(nov_strok)
+
+    return novaimatr
+
+print(transpose([[1, 2, 3]]))
+print(transpose([[1], [2], [3]]))
+print(transpose([[1, 2], [3, 4]]))
+print(transpose([]))
+print(transpose([[1, 2], [3]]))
+```
+![alt text](images/lab_02/ex04.png)
+
+Задание №5
+```python
+def row_sums(mat: list[list[float | int]]) -> list[float]:
+    dlina = len(mat[0])
+    for i in range(0, len(mat)):
+        if dlina != len(mat[i]):
+            return "ValueError"
+        
+    summi = []
+    for j in range(0, len(mat)):
+        summi.append(sum(mat[j]))
+
+    return summi
+
+print(row_sums([[1, 2, 3], [4, 5, 6]]))
+print(row_sums([[-1, 1], [10, -10]]))
+print(row_sums([[0, 0], [0, 0]]))
+print(row_sums([[1, 2], [3]]))
+```
+![alt text](images/lab_02/ex05.png)
+
+Задание №6
+```python
+def col_sums(mat: list[list[float | int]]) -> list[float]:
+    dlina = len(mat[0])
+    for i in range(0, len(mat)):
+        if dlina != len(mat[i]):
+            return "ValueError"
+    
+    sp = []
+    for index_stolb in range(len(mat[0])):
+        summa = 0
+        for riad in mat:
+            summa += riad[index_stolb]
+        
+        sp.append(summa)
+
+    return sp
+
+
+print(col_sums([[1, 2, 3], [4, 5, 6]]))
+print(col_sums([[-1, 1], [10, -10]]))
+print(col_sums([[0, 0], [0, 0]]))
+print(col_sums([[1, 2], [3]]))
+
+```
+![alt text](images/lab_02/ex06.png)
+
+Задание №7
+```python
+def format_record(rec: tuple[str, str, float]):
+    name, group, eval = rec
+
+    if not isinstance(name, str):
+        return "ValueError"
+    if not isinstance(group, str):
+        return "ValueError"
+    if not isinstance(eval, float):
+        return "ValueError"
+    
+    clean_name = " ".join(name.strip().split())
+    parts_initialos = clean_name.split()
+    familia = parts_initialos[0].title()
+    initiale = ".".join(first[0].upper() for first in parts_initialos[1:]) + '.'
+
+    new_group = group.strip()
+
+    new_eval = f"{eval:.2f}"
+
+    itog = f"{familia} {initiale}, гр. {new_group}, GPA {new_eval}" 
+
+    return itog
+
+print(format_record(("Иванов Иван Иванович", "BIVT-25", 4.6)))
+print(format_record(("Петров Пётр", "IKBO-12", 5.0)))
+print(format_record(("Петров Пётр Петрович", "IKBO-12", 5.0)))
+print(format_record(("  сидорова  анна   сергеевна ", "ABB-01", 3.999)))
+
+```
+![alt text](images/lab_02/ex07.png)
+
+
+
+
