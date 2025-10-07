@@ -243,7 +243,7 @@ print(format_record(( "BIVT-25", 4.6)))
 
 
 ```
-![alt text](images/lab_02/ex07.png)
+![alt text](images/lab_02/ex07.02.png)
 
 
 
