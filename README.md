@@ -7,7 +7,7 @@ Name = input()
 Age = int(input())
 print("Привет,", Name + "!" ,"Через год тебе будет", Age + 1, end = ".")
 ```
-![alt text](<images/lab_01/ex1 .png>)
+![alt text](<images/lab_01/Задание №1.png>)
 
 # Задание №2
 ```python

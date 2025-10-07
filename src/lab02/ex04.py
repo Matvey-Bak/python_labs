@@ -11,7 +11,6 @@ def transpose(mat: list[list[float | int]]):
     col_stolb = len(mat[0])
 
     novaimatr = []
-
     for index_stolb in range(col_stolb):
         nov_strok = []
         for index_strok in range(col_strok):
