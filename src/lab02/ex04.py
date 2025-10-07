@@ -5,7 +5,7 @@ def transpose(mat: list[list[float | int]]):
     dlina = len(mat[0])
     for i in range(0, len(mat)):
         if dlina != len(mat[i]):
-            return "ValueError"
+            raise TypeError ("Длина не совпадает")
         
     col_strok = len(mat)
     col_stolb = len(mat[0])

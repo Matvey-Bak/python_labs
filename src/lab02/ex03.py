@@ -2,7 +2,7 @@ def flatten(mat: list[list | tuple]) -> list:
     sp = []
     for i in mat:
         if not isinstance(i, (list, tuple)):
-            return "TypeError"
+            raise TypeError ("Ошибка с типом данных")
         else:
             sp.extend(i)    
     return sp

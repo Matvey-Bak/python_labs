@@ -2,7 +2,7 @@ def row_sums(mat: list[list[float | int]]) -> list[float]:
     dlina = len(mat[0])
     for i in range(0, len(mat)):
         if dlina != len(mat[i]):
-            return "ValueError"
+            raise TypeError ("Длина не совпадает")
         
     summi = []
     for j in range(0, len(mat)):
