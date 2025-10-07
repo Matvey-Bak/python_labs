@@ -11,25 +11,29 @@ print("Привет,", Name + "!" ,"Через год тебе будет", Age 
 
  Задание №2
 ```python
-a = float(input())
-b = float(input())
+a = input()
+b = input()
+a = a.replace(",",".",1)
+b = b.replace(",",".",1)
+a = float(a)
+b = float(b)
 sum = a + b
-avg = (a + b) / 2
-print(sum)
-print(avg)
+avg = (a + b)/2
+print(f"{sum:.2f}")
+print(f"{avg:.2f}")
 ```
 ![alt text](images/lab_01/ex02.png)
  Задание №3
 ```python
-price = int(input())
-discount = int(input())
-vat = int(input())
-base = price * (1 - discount / 100)
+price = float(input())
+discount = float(input())
+vat = float(input())
+base = price * (1 - discount/100)
 vat_amount = base * (vat/100)
 total = base + vat_amount
-print("База после скидки:", f"{base:.2f}")
-print("НДС:", f"{vat_amount:.2f}")
-print("Итого к оплате:", f"{total:.2f}")
+print("База после скидки:",f"{base:.2f} ₽")
+print("НДС:",f"{vat_amount:.2f} ₽")
+print("Итого к оплате:",f"{total:.2f} ₽")
 ```
 ![alt text](images/lab_01/ex03.png)
  Задание №4
@@ -40,9 +44,30 @@ print(minutes // 60, ":",minutes % 60, sep = "")
 ![alt text](images/lab_01/ex04.png)
  Задание №5
 ```python
-a, b, c = input(), input(), input()
-print("Инициалы:", a[0], b[0],c[0],sep = "")
-print("Длина:", len(a + b + c), sep = "")
+FIO = input()
+k = 0
+b = []
+c = []
+x = []
+t = len(FIO)
+for i in FIO:
+    if i == " ":
+        k = k + 1
+
+if k != 2:
+    t = t - k + 2
+
+a = FIO.split()
+
+b.append(a[0])
+c.append(a[1])
+x.append(a[2])
+
+q = b[0]
+w = c[0]
+e = x[0]
+print("Инициалы:", q[0], w[0], e[0],sep="")
+print("Длина символов:", t)
 ```
 ![alt text](images/lab_01/ex05.png)
 
