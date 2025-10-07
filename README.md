@@ -22,7 +22,7 @@ avg = (a + b)/2
 print(f"{sum:.2f}")
 print(f"{avg:.2f}")
 ```
-![alt text](images/lab_01/ex02.png)
+![alt text](images/lab_01/ex02.2.png)
  Задание №3
 ```python
 price = float(input())
@@ -35,7 +35,7 @@ print("База после скидки:",f"{base:.2f} ₽")
 print("НДС:",f"{vat_amount:.2f} ₽")
 print("Итого к оплате:",f"{total:.2f} ₽")
 ```
-![alt text](images/lab_01/ex03.png)
+![alt text](images/lab_01/ex03.2.png)
  Задание №4
 ```python
 minutes = int(input())
@@ -69,7 +69,7 @@ e = x[0]
 print("Инициалы:", q[0], w[0], e[0],sep="")
 print("Длина символов:", t)
 ```
-![alt text](images/lab_01/ex05.png)
+![alt text](images/lab_01/ex05.2.png)
 
  Задание №7 
 ```python
