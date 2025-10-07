@@ -1,7 +1,7 @@
 <<<<<<< HEAD
 # python_labs
 # Лабораторная работа №1 
-# Задание №1
+ Задание №1
 ```python
 Name = input()
 Age = int(input())
@@ -9,7 +9,7 @@ print("Привет,", Name + "!" ,"Через год тебе будет", Age 
 ```
 ![alt text](<images/lab_01/Задание №1.png>)
 
-# Задание №2
+ Задание №2
 ```python
 a = float(input())
 b = float(input())
@@ -19,7 +19,7 @@ print(sum)
 print(avg)
 ```
 ![alt text](images/lab_01/ex02.png)
-# Задание №3
+ Задание №3
 ```python
 price = int(input())
 discount = int(input())
@@ -32,13 +32,13 @@ print("НДС:", f"{vat_amount:.2f}")
 print("Итого к оплате:", f"{total:.2f}")
 ```
 ![alt text](images/lab_01/ex03.png)
-# Задание №4
+ Задание №4
 ```python
 minutes = int(input())
 print(minutes // 60, ":",minutes % 60, sep = "")
 ```
 ![alt text](images/lab_01/ex04.png)
-# Задание №5
+ Задание №5
 ```python
 a, b, c = input(), input(), input()
 print("Инициалы:", a[0], b[0],c[0],sep = "")
@@ -46,7 +46,7 @@ print("Длина:", len(a + b + c), sep = "")
 ```
 ![alt text](images/lab_01/ex05.png)
 
-# Задание №7 
+ Задание №7 
 ```python
 a = "thisisabracadabraHt1eadljjl12ojh."
 index1 = 0
