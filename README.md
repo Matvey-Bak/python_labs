@@ -77,7 +77,7 @@ print(m)
 ```python
 def min_max(nums: list[float | int]) -> tuple[float | int, float | int]:
     if len(nums) == 0:
-        return ("ValueError")
+        raise TypeError
     else:
         return min(nums), max(nums)
 
@@ -109,7 +109,7 @@ def flatten(mat: list[list | tuple]) -> list:
     sp = []
     for i in mat:
         if not isinstance(i, (list, tuple)):
-            return "TypeError"
+            raise TypeError ("Ошибка в типе данных")
         else:
             sp.extend(i)    
     return sp
@@ -130,7 +130,7 @@ def transpose(mat: list[list[float | int]]):
     dlina = len(mat[0])
     for i in range(0, len(mat)):
         if dlina != len(mat[i]):
-            return "ValueError"
+            raise TypeError ("Длина не совпадает")
         
     col_strok = len(mat)
     col_stolb = len(mat[0])
@@ -159,7 +159,7 @@ def row_sums(mat: list[list[float | int]]) -> list[float]:
     dlina = len(mat[0])
     for i in range(0, len(mat)):
         if dlina != len(mat[i]):
-            return "ValueError"
+            raise TypeError ("Длина не совпадает")
         
     summi = []
     for j in range(0, len(mat)):
@@ -180,7 +180,7 @@ def col_sums(mat: list[list[float | int]]) -> list[float]:
     dlina = len(mat[0])
     for i in range(0, len(mat)):
         if dlina != len(mat[i]):
-            return "ValueError"
+            raise TypeError ("Длина не совпадает")
     
     sp = []
     for index_stolb in range(len(mat[0])):
