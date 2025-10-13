@@ -151,6 +151,9 @@ if __name__ == "__main__":
 ```
 ![alt text](../../images/lab_03/img04.png)
 
+
+![alt text](<../../images/lab_03/Задние B hard.png>)
+
 # Описание работы кода 
 
 ## Модуль импорта и настройки путей

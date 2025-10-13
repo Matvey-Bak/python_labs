@@ -445,3 +445,6 @@ if __name__ == "__main__":
     main()
 ```
 ![alt text](images/lab_03/img04.png)
+
+
+![alt text](<images/lab_03/Задние B hard.png>)
