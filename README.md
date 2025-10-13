@@ -270,6 +270,148 @@ print(format_record(( "BIVT-25", 4.6)))
 ```
 ![alt text](images/lab_02/ex07.02.png)
 
+# Лабораторная работа №3
+Задание №1 normalize
+```python
+def normalize(text: str, *, casefold: bool = True, yo2e: bool = True):
+    normalize_text = ""
+    for part_text in text:
+        if part_text in {'\t', '\r', '\n'}:
+            normalize_text += ' '
+        else:
+            normalize_text += part_text
+
+    if yo2e:    
+        normalize_text = normalize_text.replace("ё", "е")
+        normalize_text = normalize_text.replace("Ё", "Е")
+
+    if casefold:
+        normalize_text = normalize_text.casefold()
+
+    normalize_text = " ".join(normalize_text.split())
+
+    return normalize_text
+    
+print(normalize("ПрИвЕт\nМИр\t"))
+print(normalize("ёжик, Ёлка"))
+print(normalize("Hello\r\nWorld"))
+print(normalize("  двойные   пробелы  "))
+```
+![alt text](images/lab_03/img01.png)
+
+Задание №2 tokenize
+```python
+def remove_emoji(text: str) -> str:
+    # Основные диапазоны эмодзи в Unicode
+    emoji_ranges = [
+        (0x1F600, 0x1F64F),  
+        (0x1F300, 0x1F5FF), 
+        (0x1F680, 0x1F6FF),  
+        (0x1F1E0, 0x1F1FF),
+        (0x2600, 0x26FF),    
+        (0x2700, 0x27BF),    
+        (0xFE00, 0xFE0F),    
+        (0x1F900, 0x1F9FF),  
+    ]
+    
+    result = []
+    for char in text:
+        # Проверяем, попадает ли символ в любой из диапазонов эмодзи
+        is_emoji = any(start <= ord(char) <= end for start, end in emoji_ranges)
+        if not is_emoji:
+            result.append(char)
+    
+    return ''.join(result)
 
 
+def normalize(text: str, *, casefold: bool = True, yo2e: bool = True, remove_emojis: bool = True):
+    normalize_text = ""
+    
+    if remove_emojis:
+        text = remove_emoji(text)
+    
+    for part_text in text:
+        if part_text in ['\t', '\r', '\n']:
+            normalize_text += ' '
+        else:
+            normalize_text += part_text
 
+    if yo2e:    
+        normalize_text = normalize_text.replace("ё", "е")
+        normalize_text = normalize_text.replace("Ё", "Е")
+
+    if casefold:
+        normalize_text = normalize_text.casefold()
+
+    normalize_text = " ".join(normalize_text.split())
+
+    return normalize_text
+
+    
+def tokenize(text: str):
+    token = normalize(text)
+    token_1 = token.split()
+    return token_1
+
+
+print(tokenize("привет мир"))
+print(tokenize("hello,world!!!"))
+print(tokenize("по-настоящему круто"))
+print(tokenize("emoji 😀 не слово"))
+```
+
+![alt text](images/lab_03/img02.png)
+
+Задание №3 count_freq and top_n
+```python
+def count_freq(tokens: list[str]):
+    count = {}
+    for i in tokens:
+        count[i] = count.get(i, 0) + 1
+    return count
+
+def top_n(freq: dict[str, int], n: int = 5) -> list[tuple[str, int]]:
+    sorted_items = sorted(freq.items(), key=lambda x: (-x[1], x[0]))
+    return sorted_items[:n]
+
+print(top_n(count_freq(["a","b","a","c","b",]), n = 2))
+print(top_n(count_freq(["bb","aa","bb","aa","cc","bb"]), n = 2))
+```
+![alt text](images/lab_03/img03.png)
+
+Задание №4 сложное 
+```python
+import os
+import sys
+
+# Добавляем путь для импорта из lib/text.py
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from lib.text import normalize, tokenize, count_freq, top_n
+
+def main():
+    # Получаем текст через input()
+    text = input("Введите текст для анализа: ").strip()
+
+    if not text:
+        return print("Ошибка: нет входных данных")
+        
+
+    # Обрабатываем текст
+    normal_text = normalize(text)
+    tokens = tokenize(normal_text)
+    freq = count_freq(tokens)
+    top_words = top_n(freq, n=5)
+
+    # Выводим результаты
+    print(f"Всего слов: {len(tokens)}")
+    print(f"Уникальных слов: {len(freq)}")
+    print("Топ-5:")
+
+    for word, count in top_words:
+        print(f"{word}: {count}")
+
+if __name__ == "__main__":
+    main()
+```
+
+![alt text](images/lab_03/img04.png)
