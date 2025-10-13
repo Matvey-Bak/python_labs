@@ -379,39 +379,69 @@ print(top_n(count_freq(["bb","aa","bb","aa","cc","bb"]), n = 2))
 ```
 ![alt text](images/lab_03/img03.png)
 
-Задание №4 сложное 
+Задание № B *
 ```python
 import os
 import sys
 
-# Добавляем путь для импорта из lib/text.py
+
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from lib.text import normalize, tokenize, count_freq, top_n
 
+
+TABLE_MODE = os.getenv('TABLE_MODE', 'false').lower() == 'true'
+
+
+
+def format_table(top_words):
+    if not top_words:
+        raise ValueError("Нет данных для отображения")
+    
+    max_word_length = max(len(str(word)) for word, _ in top_words)
+    max_word_length = max(max_word_length, 6)
+    
+    header_word = "слово".ljust(max_word_length)
+    header = f"{header_word} | частота"
+    separator = "-" * (len(header) + 2)
+    
+    lines = [header, separator]
+    for word, count in top_words:
+        word_str = str(word).ljust(max_word_length)
+        lines.append(f"{word_str} | {count}")
+    
+    return "\n".join(lines)
+
+
+
+def format_simple(top_words):
+    lines = []
+    for word, count in top_words:
+        lines.append(f"{word}: {count}")
+    return "\n".join(lines)
+
+
+
 def main():
-    # Получаем текст через input()
     text = input("Введите текст для анализа: ").strip()
 
     if not text:
-        return print("Ошибка: нет входных данных")
-        
+        raise ValueError('Ошибка: нет входных данных')
 
-    # Обрабатываем текст
     normal_text = normalize(text)
     tokens = tokenize(normal_text)
     freq = count_freq(tokens)
     top_words = top_n(freq, n=5)
 
-    # Выводим результаты
     print(f"Всего слов: {len(tokens)}")
     print(f"Уникальных слов: {len(freq)}")
     print("Топ-5:")
-
-    for word, count in top_words:
-        print(f"{word}: {count}")
+    
+    if TABLE_MODE:
+        print(format_table(top_words))
+    else:
+        print(format_simple(top_words))
 
 if __name__ == "__main__":
     main()
 ```
-
 ![alt text](images/lab_03/img04.png)
