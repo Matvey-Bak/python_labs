@@ -6,7 +6,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from lib.text import normalize, tokenize, count_freq, top_n
 
 
-TABLE_MODE = os.getenv('TABLE_MODE', 'true').lower() == 'true'
+table_mode = os.getenv('table_mode', 'true').lower() == 'true'
 
 def format_table(top_words):
     if not top_words:
@@ -48,7 +48,7 @@ def main():
     print(f"Уникальных слов: {len(freq)}")
     print("Топ-5:")
     
-    if TABLE_MODE:
+    if table_mode:
         print(format_table(top_words))
     else:
         print(format_simple(top_words))
