@@ -448,3 +448,169 @@ if __name__ == "__main__":
 
 
 ![alt text](<images/lab_03/Задние B hard.png>)
+
+
+# Лабораторная работа №4
+
+**1. Задание A**
+
+```python
+import csv
+import pathlib
+from typing import Union
+from pathlib import Path
+
+def read_text(path: str | Path, encoding: str = "utf-8") -> str:
+    with open(path, 'r', encoding=encoding) as file:
+        return file.read()
+    
+
+def write_csv(rows: list[Union[tuple, list]], path: Union[str, Path], header: Union[tuple[str, ...], None] = None) -> None:
+    if rows:
+        first_row_length = len(rows[0])
+        for i, row in enumerate(rows):
+            if len(row) != first_row_length:
+                raise ValueError(f"Все строки должны иметь одинаковую длину. "
+                               f"Строка 0 имеет длину {first_row_length}, "
+                               f"строка {i} имеет длину {len(row)}")
+    
+    
+    if header and rows:
+        if len(header) != len(rows[0]):
+            raise ValueError(f"Заголовок имеет длину {len(header)}, "
+                           f"а строки данных имеют длину {len(rows[0])}")
+    
+    
+    with open(path, 'w', newline='', encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',')
+        
+        
+        if header:
+            writer.writerow(header)
+        
+        writer.writerows(rows)
+    
+    
+
+text1 = read_text(r"C:\Users\User\Desktop\Proga\python_labs\data\lab04\a.txt")
+write_csv([
+    ("Python", "1991", "Гвидо ван Россум"),
+    ("Java", "1995", "Джеймс Гослинг"), 
+    ("JavaScript", "1995", "Брендан Эйх"),
+    ("C++", "1985", "Бьёрн Страуструп")
+], r"C:\Users\User\Desktop\Proga\python_labs\data\lab04\b.txt", 
+   header=("Язык программирования", "Год создания", "Автор"))
+
+```
+**🔧 Функциональность:**
+1. Чтение текстовых файлов с поддержкой различных кодировок
+
+2. Создание CSV файлов с проверкой целостности данных
+
+3. Валидация входных данных перед записью
+
+
+
+
+**2. Задание B**
+
+```python
+import csv
+from pathlib import Path
+import sys
+import os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from lib.text import normalize, tokenize, count_freq, top_n
+
+def write_csv_report(sorted_words: list[tuple[str, int]], output_path: str | Path):
+    path_obj = Path(output_path)
+    path_obj.parent.mkdir(parents=True, exist_ok=True)
+
+    with open(path_obj, 'w', newline='', encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['word', 'count'])
+        
+        for word, count in sorted_words:
+            writer.writerow([word, count])
+
+def main():
+    if len(sys.argv) > 1:
+        input_file = Path(sys.argv[1])
+    else:
+        input_file = Path(r"C:\Users\User\Desktop\Proga\python_labs\data\lab04\input.txt")
+    
+    output_file = Path(r"C:\Users\User\Desktop\Proga\python_labs\data\report.csv")
+    
+    try:
+        # 1. Читаем входной файл
+        print(f"Чтение файла: {input_file}")
+        with open(input_file, 'r', encoding='utf-8') as file:
+            text = file.read()
+        
+        # 2. Нормализуем текст
+        normalized_text = normalize(text)
+        
+        # 3. Токенизируем
+        tokens = tokenize(normalized_text)
+        total_words = len(tokens)
+        
+        # 4. Считаем частоты
+        frequencies = count_freq(tokens)
+        unique_words = len(frequencies)
+        
+        # 5. Сортируем слова для CSV отчета
+        sorted_words = top_n(frequencies, 5)
+        
+        # 6. Сохраняем отчет в CSV
+        print(f"Сохранение отчета: {output_file}")
+        write_csv_report(sorted_words, output_file)
+        
+        # 7. Печатаем резюме в консоль
+        print(f"Всего слов: {total_words}")
+        print(f"Уникальных слов: {unique_words}")
+        print("Топ-5:")
+        for i, (word, count) in enumerate(sorted_words, 1):
+            print(f"  {i}. '{word}' - {count} раз(а)")
+        
+    except FileNotFoundError:
+        print(f"Ошибка: Файл {input_file} не найден!")
+        print("Убедитесь, что файл существует по указанному пути.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Произошла ошибка: {e}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
+
+```
+**📈 Процесс анализа**
+1. Чтение исходного текста
+
+2. Нормализация и подготовка текста
+
+3. Разбиение на слова (токенизация)
+
+4. Подсчет статистики - общие и уникальные слова
+
+5. Определение топ-5 самых частых слов
+
+6. Сохранение отчета в CSV формате
+
+7. Вывод сводки в консоль
+
+
+![alt text](<images/lab04/Задание B1.png>)
+
+![alt text](<images/lab04/Задание B2.png>)
+
+
+**🎯 Итоги работы:**
+1. Реализованы утилиты для работы с текстовыми файлами и CSV
+
+2. Создан анализатор текста с выводом статистики
+
+3. Обеспечена обработка ошибок и валидация данных
+
+4. Реализовано консольное приложение для анализа текстов
