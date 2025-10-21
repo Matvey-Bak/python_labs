@@ -34,13 +34,6 @@ def write_csv(rows: list[Union[tuple, list]], path: Union[str, Path], header: Un
     
     
 
-text1 = read_text(r"C:\Users\User\Desktop\Proga\python_labs\data\lab04\a.txt")
-write_csv([
-    ("Python", "1991", "Гвидо ван Россум"),
-    ("Java", "1995", "Джеймс Гослинг"), 
-    ("JavaScript", "1995", "Брендан Эйх"),
-    ("C++", "1985", "Бьёрн Страуструп")
-], r"C:\Users\User\Desktop\Proga\python_labs\data\lab04\b.txt", 
-   header=("Язык программирования", "Год создания", "Автор"))
+
 
 
