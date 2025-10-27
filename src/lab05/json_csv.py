@@ -1,6 +1,10 @@
 import json
 import csv
 from pathlib import Path
+import sys
+import os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 """
 Функция для преобразования формта данных json в csv 
@@ -125,3 +129,14 @@ def csv_to_json(csv_path: str, json_path: str) -> None:
             
     except Exception as e:
         raise ValueError(f"Ошибка записи JSON: {e}")
+    
+json_to_csv("python_labs\data\lab05\samples\FIO.json", "python_labs\data\lab05\out\FIO from json.csv")
+csv_to_json("python_labs\data\lab05\samples\Country.csv", "python_labs\data\lab05\out\Country from csv.json")
+
+
+
+
+
+
+
+

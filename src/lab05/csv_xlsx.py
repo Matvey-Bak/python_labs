@@ -1,5 +1,10 @@
 import csv
 from pathlib import Path
+import sys
+import os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
 
 
 def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
@@ -87,3 +92,8 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
         
     except Exception as e:
         raise ValueError(f"Ошибка создания XLSX файла: {e}")
+    
+
+
+
+csv_to_xlsx(r"python_labs\data\lab05\samples\Country.csv", r"python_labs\data\lab05\out\citiescsv.xlsx")
