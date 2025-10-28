@@ -1,0 +1,17 @@
+[
+  {
+    "username": "ProGamer",
+    "level": 45,
+    "game": "Cyberpunk"
+  },
+  {
+    "username": "DarkKnight",
+    "rank": "Gold",
+    "hours_played": 120
+  },
+  {
+    "username": "Quantum",
+    "game": "Starfield",
+    "achievements": 15
+  }
+]

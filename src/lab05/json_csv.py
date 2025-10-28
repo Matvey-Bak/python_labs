@@ -132,10 +132,9 @@ def csv_to_json(csv_path: str, json_path: str) -> None:
     
 json_to_csv("python_labs\data\lab05\samples\FIO.json", "python_labs\data\lab05\out\FIO from json.csv")
 csv_to_json("python_labs\data\lab05\samples\Country.csv", "python_labs\data\lab05\out\Country from csv.json")
-
-
-
-
+csv_to_json("python_labs\data\lab05\samples\no_header.csv", "python_labs\data\lab05\out\n0_header_from_csv.json")
+json_to_csv("python_labs\data\lab05\samples\FIO.json", "python_labs\data\lab05\out\FIO from json.csv")
+json_to_csv("python_labs\data\lab05\samples\game_json to csv.json", "python_labs\data\lab05\out\game_from json to csv.csv")
 
 
 
