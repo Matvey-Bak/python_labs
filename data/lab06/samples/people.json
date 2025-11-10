@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Alice",
+    "age": "22",
+    "city": "SPB"
+  },
+  {
+    "name": "Bob",
+    "age": "25",
+    "city": "Moscow"
+  },
+  {
+    "name": "Pekka",
+    "age": "20",
+    "city": "ClasRoyale"
+  },
+  {
+    "name": "Maxim",
+    "age": "18",
+    "city": "Domodedovo"
+  },
+  {
+    "name": "Andrey",
+    "age": "18",
+    "city": "Vidnoe"
+  }
+]

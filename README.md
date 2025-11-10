@@ -735,6 +735,8 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
 csv_to_xlsx(r"python_labs\data\lab05\samples\Country.csv", r"python_labs\data\lab05\out\citiescsv.xlsx")
 ```
 
+![alt text](images/lab05/csv2xlsx.png)
+
 #### 2. Функция `json_to_csv()`
 **Назначение:** Преобразование JSON файла в формат CSV
 
@@ -833,6 +835,11 @@ def json_to_csv(json_path: str, csv_path: str) -> None:
         raise ValueError(f"Ошибка записи CSV: {e}")
 ```
 
+![alt text](images/lab05/json2csv02.png)
+
+
+![alt text](images/lab05/json2csv.png)
+
 
 #### 3. Функция `csv_to_json()`
 **Назначение:** Преобразование CSV файла в формат JSON
@@ -899,6 +906,11 @@ def csv_to_json(csv_path: str, json_path: str) -> None:
 
 ---
 
+![alt text](images/lab05/csv2json.png)
+
+
+![alt text](images/lab05/csv2json02.png)
+
 ### Выводы
 
 В ходе лабораторной работы успешно реализована программа для конвертации данных между популярными форматами. Программа демонстрирует:
@@ -908,3 +920,211 @@ def csv_to_json(csv_path: str, json_path: str) -> None:
 -  Применение современных Python библиотек (`openpyxl`, `pathlib`)
 -  Создание пользовательского кода с четкой структурой и комментариями
 -  Обработку edge-cases (пустые файлы, разные структуры данных)
+
+
+
+
+
+
+# Лабораторная работа №6
+## CLI-утилиты с argparse (cat/grep-lite + конвертеры)
+
+---
+
+### Цель работы
+Разработка консольных утилит для обработки текстовых данных и конвертации между различными форматами файлов с использованием модуля `argparse`.
+
+### Реализованные функции
+
+#### 1. Основной модуль конвертера данных
+
+![alt text](images/lab06/comands.png)
+
+**Назначение:** CLI-утилита для конвертации данных между форматами JSON, CSV и XLSX
+
+**Код реализации:**
+```python
+import argparse
+import sys
+import os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+from lib.text import json_to_csv, csv_to_json, csv_to_xlsx
+
+def main():
+    parser = argparse.ArgumentParser(description="Конвертер данных между форматами")
+    subparsers = parser.add_subparsers(dest="command")
+
+    json_to_csv_parser = subparsers.add_parser("json2csv", help="Конвертировать JSON в CSV")
+    json_to_csv_parser.add_argument("--in", dest="input_file", required=True, help="Входной JSON файл")
+    json_to_csv_parser.add_argument("--out", dest="output_file", required=True, help="Выходной CSV файл")
+
+    csv_to_json_parser = subparsers.add_parser("csv2json", help="Конвертировать CSV в JSON")
+    csv_to_json_parser.add_argument("--in", dest="input_file", required=True, help="Входной CSV файл")
+    csv_to_json_parser.add_argument("--out", dest="output_file", required=True, help="Выходной JSON файл")
+
+    csv_to_xlsx_parser = subparsers.add_parser("csv2xlsx", help="Конвертировать CSV в XLSX")
+    csv_to_xlsx_parser.add_argument("--in", dest="input_file", required=True, help="Входной CSV файл")
+    csv_to_xlsx_parser.add_argument("--out", dest="output_file", required=True, help="Выходной XLSX файл")
+
+    args = parser.parse_args()
+
+    if args.command == "json2csv":
+        json_to_csv(args.input_file, args.output_file)
+    elif args.command == "csv2json":
+        csv_to_json(args.input_file, args.output_file)
+    elif args.command == "csv2xlsx":
+        csv_to_xlsx(args.input_file, args.output_file)
+
+if __name__ == "__main__":
+    main()
+```
+
+![alt text](<images/lab06/help convert.png>)
+
+![alt text](images/lab06/peoplexlsx.png)
+
+![alt text](images/lab06/json2csv.png)
+
+
+
+**Особенности реализации:**
+- Модульная архитектура с субпарсерами для каждой команды
+- Валидация обязательных аргументов (--in, --out)
+- Подробные сообщения помощи с примерами использования
+- Информативный вывод процесса конвертации
+
+
+### 2. Модуль анализа и просмотра текста
+
+
+```python
+import argparse
+import sys
+import os
+
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from lib.text import tokenize, count_freq, top_n
+
+
+def stats(input_file: str, top: int = 5):
+    try:
+        with open(input_file, 'r', encoding='utf-8') as file:
+            text = file.read()
+        
+
+        tokens = tokenize(text)          
+        frequencies = count_freq(tokens) 
+        top_words = top_n(frequencies, top)
+        
+
+        print(f"Топ-{top} самых частых слов:")
+        print("-" * 30)
+        for i, (word, freq) in enumerate(top_words, 1):
+            print(f"{i}. '{word}': {freq} раз")
+            
+    except FileNotFoundError:
+        print(f"Ошибка: Файл '{input_file}' не найден")
+    except Exception as e:
+        print(f"Ошибка при обработке файла: {e}")
+
+
+def cat(input_file: str, number_lines: bool = False):
+    try:
+        with open(input_file, 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+        
+        for i, line in enumerate(lines, 1):
+            if number_lines:
+                print(f"{i:6d}  {line}", end='')
+            else:
+                print(line, end='')
+                
+    except FileNotFoundError:
+        print(f"Ошибка: Файл '{input_file}' не найден")
+    except Exception as e:
+        print(f"Ошибка при чтении файла: {e}")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="CLI утилиты")
+    subparsers = parser.add_subparsers(dest="command")
+
+   
+    cat_parser = subparsers.add_parser("cat", help="Вывести содержимое файла")
+    cat_parser.add_argument("--input", required=True, help="Путь к файлу")
+    cat_parser.add_argument("-n", action="store_true", help="Нумеровать строки")
+
+    
+    stats_parser = subparsers.add_parser("stats", help="Частоты слов")
+    stats_parser.add_argument("--input", required=True, help="Путь к файлу")
+    stats_parser.add_argument("--top", type=int, default=5, help="Количество топ-слов")
+
+    args = parser.parse_args()
+
+    if not args.command:
+        parser.print_help()
+        return
+
+
+    if args.command == "stats":
+        stats(args.input, args.top)
+    elif args.command == "cat":
+        cat(args.input, args.n) 
+
+
+if __name__ == "__main__":
+    main()
+```
+
+1. Команда cat
+Назначение: Вывод содержимого текстового файла
+
+Функциональность:
+
+Отображение содержимого файла
+
+Опциональная нумерация строк (флаг -n)
+
+Поддержка кодировки UTF-8
+
+Обработка ошибок файловой системы
+
+![alt text](<images/lab06/text cat people -n.png>)
+
+
+![alt text](<images/lab06/text cat people.png>)
+
+
+2. Команда stats
+Назначение: Статистический анализ текста
+
+Функциональность:
+
+Токенизация текста (разбивка на слова)
+
+Подсчет частоты встречаемости слов
+
+Вывод топ-N самых частых слов
+
+Настраиваемое количество отображаемых слов (параметр --top)
+
+
+![alt text](<images/lab06/text stats people -top5.png>)
+
+
+
+### Выводы
+
+В ходе лабораторной работы успешно разработаны три CLI-утилиты, демонстрирующие:
+
+- **Умение работать с argparse:** Создание сложных интерфейсов командной строки с субпарсерами
+- **Обработку текстовых данных:** Реализация функциональности аналогов Unix-утилит
+- **Модульность кода:** Разделение ответственности между различными компонентами
+- **Обработку ошибок:** Надежная работа с файлами и пользовательским вводом
+- **Документирование:** Создание понятной справки и примеров использования
+
+Разработанные утилиты готовы к практическому применению и могут быть расширены дополнительной функциональностью.
+```
