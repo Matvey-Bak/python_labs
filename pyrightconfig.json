@@ -1,0 +1,30 @@
+{
+  "include": [
+    "src",
+    "tests"
+  ],
+  "exclude": [
+    "**/__pycache__",
+    "**/node_modules"
+  ],
+  "extraPaths": [
+    "src"
+  ],
+  "pythonVersion": "3.11",
+  "typeCheckingMode": "basic",
+  "reportMissingImports": "warning",
+  "reportMissingTypeStubs": false,
+  "reportImportCycles": false,
+  "reportUnusedImport": "none",
+  "reportUnusedClass": "none",
+  "reportUnusedFunction": "none",
+  "reportUnusedVariable": "none",
+  "executionEnvironments": [
+    {
+      "root": ".",
+      "pythonVersion": "3.11",
+      "extraPaths": ["src"]
+    }
+  ]
+}
+

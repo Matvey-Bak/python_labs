@@ -8,7 +8,10 @@ for j in range(0, len(a)):
 
 index2 = 0
 for c in range(0, len(a) - 1):
-    if (a[c] in "0123456789") and ((a[c + 1] in "qwertyuiopasdfghjklzxcvbnm") or (a[c + 1] in "QWERTYUIOPASDFGHJKLZXCVBNM")):
+    if (a[c] in "0123456789") and (
+        (a[c + 1] in "qwertyuiopasdfghjklzxcvbnm")
+        or (a[c + 1] in "QWERTYUIOPASDFGHJKLZXCVBNM")
+    ):
         index2 = c
         break
 
