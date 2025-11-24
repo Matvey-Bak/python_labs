@@ -3,7 +3,6 @@ import json
 import csv
 from pathlib import Path
 
-# Простой способ - добавьте родительскую директорию
 
 from lib.text import json_to_csv, csv_to_json
 
@@ -201,7 +200,7 @@ class TestCsvToJson:
         csv_file = tmp_path / "invalid.csv"
         json_file = tmp_path / "output.json"
         
-        with open(csv_file, 'w', encoding='utf-8') as f:
+        with open(csv_file, 'w', encoding='utf-8', newline='') as f:
             f.write('"name","age\n"Alice","25"')  # Незакрытые кавычки
         
         with pytest.raises(ValueError, match="Ошибка парсинга CSV"):

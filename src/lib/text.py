@@ -157,13 +157,10 @@ def json_to_csv(json_path: str, csv_path: str) -> None:
     for item in data:
         all_fields.update(item.keys())
     
-    if len(data) > 0:
-        first_item_fields = list(data[0].keys())
-        remaining_fields = sorted(all_fields - set(first_item_fields))
-        fieldnames = first_item_fields + remaining_fields
-
-    else:
-        fieldnames = sorted(all_fields)
+    # len(data) > 0 гарантировано, так как мы проверили len(data) == 0 выше
+    first_item_fields = list(data[0].keys())
+    remaining_fields = sorted(all_fields - set(first_item_fields))
+    fieldnames = first_item_fields + remaining_fields
     
     try:
         with open(csv_path, 'w', encoding='utf-8', newline='') as f:
@@ -189,7 +186,7 @@ def csv_to_json(csv_path: str, json_path: str) -> None:
         raise ValueError(f"Неверный тип файла: ожидается .csv, получен {csv_file.suffix}")
     
     try:
-        with open(csv_path, 'r', encoding='utf-8') as f:
+        with open(csv_path, 'r', encoding='utf-8', newline='') as f:
             reader = csv.DictReader(f)
             
             if reader.fieldnames is None:

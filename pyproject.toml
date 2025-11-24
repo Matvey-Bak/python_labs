@@ -28,3 +28,12 @@ addopts = "--verbose --color=yes"
 pythonpath = [
     ".", "src"
 ]
+
+[tool.pyright]
+include = ["src", "tests"]
+exclude = ["**/__pycache__"]
+extraPaths = ["src"]
+pythonVersion = "3.11"
+typeCheckingMode = "basic"
+reportMissingImports = true
+reportMissingTypeStubs = false
