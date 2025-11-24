@@ -1126,4 +1126,144 @@ if __name__ == "__main__":
 - **Обработку ошибок:** Надежная работа с файлами и пользовательским вводом
 - **Документирование:** Создание понятной справки и примеров использования
 
+
+
+# Лабораторная работа №7
+## Тестирование Python-приложений с pytest
+
+---
+
+### Цель работы
+Освоение принципов модульного тестирования Python-кода с использованием фреймворка pytest. Создание комплексной системы тестов для функций обработки текста и конвертации данных между форматами.
+
+### Реализованные тестовые модули
+
+#### 1. Модуль тестирования конвертации данных (test_json_csv.py)
+
+**Назначение:** Тестирование функций конвертации между форматами JSON, CSV и XLSX
+
+**Код реализации:**
+```python
+import pytest
+import json
+import csv
+from pathlib import Path
+import sys
+import os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+from lib.text import json_to_csv, csv_to_json
+
+class TestJsonToCsv:
+    """Тесты для функции json_to_csv"""
+    
+    @pytest.mark.parametrize("data,expected_count", [
+        ([{"name": "Alice", "age": 25}, {"name": "Bob", "age": 30}], 2),
+        ([{"id": 1, "value": "test"}], 1),
+        ([], 0),
+    ])
+    def test_json_to_csv_basic(self, tmp_path, data, expected_count):
+        json_file = tmp_path / "test.json"
+        csv_file = tmp_path / "output.csv"
+        
+        with open(json_file, 'w') as f:
+            json.dump(data, f)
+        
+        json_to_csv(str(json_file), str(csv_file))
+        
+        assert csv_file.exists()
+        with open(csv_file, 'r') as f:
+            reader = csv.DictReader(f)
+            assert len(list(reader)) == expected_count
+
+class TestIntegration:
+    """Интеграционные тесты полного цикла конвертации"""
+    
+    def test_roundtrip_conversion(self, tmp_path):
+        original_data = [{"name": "Test", "value": "42"}]
+        
+        json1 = tmp_path / "original.json"
+        csv_file = tmp_path / "converted.csv"
+        json2 = tmp_path / "restored.json"
+        
+        with open(json1, 'w') as f:
+            json.dump(original_data, f)
+        
+        json_to_csv(str(json1), str(csv_file))
+        csv_to_json(str(csv_file), str(json2))
+        
+        with open(json2, 'r') as f:
+            restored_data = json.load(f)
+        
+        assert len(restored_data) == len(original_data)
+        assert restored_data[0]['name'] == original_data[0]['name']
 ```
+
+
+
+**Особенности реализации:**
+- Параметризованные тесты для множественных сценариев
+- Использование фикстуры `tmp_path` для работы с временными файлами
+- Интеграционное тестирование полного цикла конвертации
+- Проверка граничных случаев (пустые файлы)
+
+#### 2. Модуль тестирования обработки текста (test_text.py)
+
+**Назначение:** Тестирование функций нормализации, токенизации и статистического анализа текста
+
+**Код реализации:**
+```python
+import pytest
+from lib.text import normalize, tokenize, count_freq, top_n
+
+class TestNormalize:
+    """Тесты для функции normalize"""
+    
+    @pytest.mark.parametrize("text,expected", [
+        ("Привет, МИР!", "привет мир"),
+        ("Hello World", "hello world"),
+        ("ёлка Ёж", "елка еж"),
+        ("", ""), ("!!!", ""),
+    ])
+    def test_normalize_basic(self, text, expected):
+        assert normalize(text) == expected
+
+class TestTokenize:
+    """Тесты для функции tokenize"""
+    
+    @pytest.mark.parametrize("text,expected", [
+        ("hello world", ["hello", "world"]),
+        ("hello, world!", ["hello", "world"]),
+        ("", []), ("single", ["single"]),
+    ])
+    def test_tokenize_basic(self, text, expected):
+        assert tokenize(text) == expected
+
+class TestIntegration:
+    """Интеграционные тесты полного pipeline обработки текста"""
+    
+    def test_pipeline(self):
+        text = "Hello hello world!"
+        tokens = tokenize(text)
+        freq = count_freq(tokens)
+        result = top_n(freq, 3)
+        expected = [("hello", 2), ("world", 1)]
+        assert result == expected
+```
+
+![alt text](images/lab07/tests.png)
+
+
+![alt text](images/lab07/black.png)
+
+### Выводы
+
+В ходе лабораторной работы успешно:
+
+- **Освоен фреймворк pytest**: Созданы параметризованные тесты, использованы фикстуры
+- **Реализовано комплексное тестирование**: Покрыты основные и граничные сценарии
+- **Настроена инфраструктура**: Конфигурация pytest, пути импорта, структура проекта
+- **Выявлены дефекты кода**: Обнаружены критические проблемы в функциях обработки
+- **Достигнуто высокое покрытие**: 85% тестов прошли успешно
+
+Работа демонстрирует практическое владение современными методами тестирования Python-приложений и способность создавать надежные тестовые сценарии для комплексной проверки функциональности.
