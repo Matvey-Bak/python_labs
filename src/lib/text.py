@@ -1,5 +1,11 @@
 # Лабораторная работа №3
-def normalize(text: str, *, casefold: bool = True, yo2e: bool = True):
+def normalize(text: str, *, casefold: bool = True, yo2e: bool = True) -> str:
+    if not isinstance(text, str):
+        raise TypeError(f"Ожидается str, получен {type(text).__name__}")
+    
+    if text is None:
+        raise TypeError("Текст не может быть None")
+    
     normalize_text = ""
     for part_text in text:
         if part_text in {'\t', '\r', '\n'}:
@@ -20,28 +26,41 @@ def normalize(text: str, *, casefold: bool = True, yo2e: bool = True):
 
 import re
 
-def tokenize(text: str):
+def tokenize(text: str) -> list[str]:
+    # Проверка типа в tokenize
+    if not isinstance(text, str):
+        raise TypeError(f"Ожидается str, получен {type(text).__name__}")
+    
     token = normalize(text)
-    
     token = re.sub(r'[^\w\s]', '', token)
-    
     token_1 = token.split()
     return token_1
 
 
-def count_freq(tokens: list[str]):
+def count_freq(tokens: list[str]) -> dict[str, int]:
+    if not isinstance(tokens, list):
+        raise TypeError(f"Ожидается list, получен {type(tokens).__name__}")
+    
     count = {}
     for i in tokens:
+        if not isinstance(i, str):
+            raise TypeError(f"Все токены должны быть str, получен {type(i).__name__}")
         count[i] = count.get(i, 0) + 1
     return count
 
 def top_n(freq: dict[str, int], n: int = 5) -> list[tuple[str, int]]:
+    if not isinstance(freq, dict):
+        raise TypeError(f"Ожидается dict, получен {type(freq).__name__}")
+    if not isinstance(n, int):
+        raise TypeError(f"n должен быть int, получен {type(n).__name__}")
+    
     sorted_items = sorted(freq.items(), key=lambda x: (-x[1], x[0]))
     return sorted_items[:n]
 
 from pathlib import Path
 from typing import Union
 import csv
+
 
 def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
     import openpyxl
