@@ -1,4 +1,10 @@
 # Лабораторная работа №3
+import re
+import csv
+import json
+from pathlib import Path
+
+
 def normalize(text: str, casefold: bool = True, yo2e: bool = True) -> str:
     if not isinstance(text, str):
         raise TypeError("text должен быть строкой")
@@ -9,16 +15,11 @@ def normalize(text: str, casefold: bool = True, yo2e: bool = True) -> str:
     if yo2e:
         text = text.replace("ё", "е").replace("Ё", "Е")
 
-    import re
-
     text = re.sub(r"[^\w\s]", " ", text)
     text = re.sub(r"\s+", " ", text)
     text = text.strip()
 
     return text
-
-
-import re
 
 
 def tokenize(text: str) -> list[str]:
@@ -54,13 +55,8 @@ def top_n(freq: dict[str, int], n: int = 5) -> list[tuple[str, int]]:
     return sorted_items[:n]
 
 
-from pathlib import Path
-from typing import Union
-import csv
-
-
 def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
-    import openpyxl
+    import openpyxl  # type: ignore
 
     csv_file = Path(csv_path)
     if not csv_file.exists():
@@ -90,15 +86,16 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
         raise ValueError("CSV файл пуст")
 
     try:
-        from openpyxl import Workbook
-
-        from openpyxl.utils import get_column_letter
+        from openpyxl import Workbook  # type: ignore
+        from openpyxl.utils import get_column_letter  # type: ignore
     except ImportError:
         raise ImportError("openpyxl не установлен. Установите: pip install openpyxl")
 
     try:
         wb = Workbook()
         ws = wb.active
+        if ws is None:
+            raise ValueError("Не удалось создать рабочий лист XLSX")
         ws.title = "Sheet1"
 
         for row_idx, row_data in enumerate(rows, 1):
@@ -121,14 +118,15 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
         raise ValueError(f"Ошибка создания XLSX файла: {e}")
 
 
-import csv
-import json
-
-
 def json_to_csv(json_path: str, csv_path: str) -> None:
     json_file = Path(json_path)
     if not json_file.exists():
         raise FileNotFoundError(f"JSON файл не найден: {json_path}")
+
+    if json_file.suffix.lower() != ".json":
+        raise ValueError(
+            f"Неверный тип файла: ожидается .json, получен {json_file.suffix}"
+        )
 
     try:
         with open(json_path, "r", encoding="utf-8") as f:
@@ -140,15 +138,25 @@ def json_to_csv(json_path: str, csv_path: str) -> None:
         raise ValueError("JSON должен содержать список объектов")
 
     if len(data) == 0:
-        with open(csv_path, "w", encoding="utf-8", newline="") as f:
-            writer = csv.writer(f)
-            writer.writerow([])
-        return
+        raise ValueError("JSON файл пуст")
+
+    if not all(isinstance(item, dict) for item in data):
+        raise ValueError("Все элементы JSON должны быть словарями")
+
+    all_fields = set()
+    for item in data:
+        all_fields.update(item.keys())
+
+    first_fields = list(data[0].keys())
+    remaining_fields = sorted(all_fields - set(first_fields))
+    fieldnames = first_fields + remaining_fields
 
     with open(csv_path, "w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=data[0].keys())
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
-        writer.writerows(data)
+        for row in data:
+            normalized_row = {field: row.get(field, "") for field in fieldnames}
+            writer.writerow(normalized_row)
 
 
 def csv_to_json(csv_path: str, json_path: str) -> None:
@@ -156,17 +164,27 @@ def csv_to_json(csv_path: str, json_path: str) -> None:
     if not csv_file.exists():
         raise FileNotFoundError(f"CSV файл не найден: {csv_path}")
 
+    if csv_file.suffix.lower() != ".csv":
+        raise ValueError(
+            f"Неверный тип файла: ожидается .csv, получен {csv_file.suffix}"
+        )
+
     try:
         with open(csv_path, "r", encoding="utf-8", newline="") as f:
             reader = csv.DictReader(f)
 
             if reader.fieldnames is None:
-                data = []
-            else:
-                data = list(reader)
+                raise ValueError("CSV файл не содержит заголовка")
 
+            data = list(reader)
+            if len(data) == 0:
+                raise ValueError("CSV файл пуст (только заголовок)")
+
+    except csv.Error as e:
+        raise ValueError(f"Ошибка парсинга CSV: {e}")
+
+    try:
+        with open(json_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
     except Exception as e:
-        raise ValueError(f"Ошибка чтения CSV: {e}")
-
-    with open(json_path, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+        raise ValueError(f"Ошибка записи JSON: {e}")
