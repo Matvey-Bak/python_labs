@@ -1267,3 +1267,177 @@ class TestIntegration:
 - **Достигнуто высокое покрытие**: 85% тестов прошли успешно
 
 Работа демонстрирует практическое владение современными методами тестирования Python-приложений и способность создавать надежные тестовые сценарии для комплексной проверки функциональности.
+
+
+
+
+# Лабораторная работа №8
+## ООП в Python: @dataclass Student, методы и сериализация
+# Цель работы
+- Освоение принципов объектно-ориентированного программирования в Python с использованием декоратора @dataclass. Создание полноценной модели данных «Студент» с методами валидации, сериализации и десериализации. Интеграция объектов с файловой системой через формат JSON.
+
+**Реализованные модули** 
+1. Модуль модели данных (models.py)
+- Назначение: определение класса Student с использованием @dataclass, реализация методов валидации, сериализации и вычислений.
+
+``` python
+from dataclasses import dataclass
+from datetime import datetime, date
+from typing import Dict, Any
+import re
+
+@dataclass
+class Student:
+    fio: str
+    birthdate: str
+    group: str
+    gpa: float
+
+    def __post_init__(self):
+        self._validate_birthdate()
+        self._validate_gpa()
+
+    def _validate_birthdate(self):
+        date_pattern = r'^\d{4}-\d{2}-\d{2}$'
+        if not re.match(date_pattern, self.birthdate):
+            raise ValueError(f"Неверный формат даты: {self.birthdate}. Ожидается: YYYY-MM-DD")
+
+        try:
+            year, month, day = map(int, self.birthdate.split('-'))
+            datetime(year, month, day)
+        except ValueError as e:
+            raise ValueError(f"Некорректная дата: {self.birthdate}. Ошибка: {e}")
+
+    def _validate_gpa(self):
+        if not (0 <= self.gpa <= 5):
+            raise ValueError(f"GPA должен быть в диапазоне от 0 до 5, получено: {self.gpa}")
+
+    def age(self) -> int:
+        birth_date = datetime.strptime(self.birthdate, '%Y-%m-%d').date()
+        today = date.today()
+        
+        age = today.year - birth_date.year
+        
+        if today < birth_date.replace(year=today.year):
+            age -= 1
+        
+        return age
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "fio": self.fio,
+            "birthdate": self.birthdate,
+            "group": self.group,
+            "gpa": self.gpa
+        }
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'Student':
+        return cls(
+            fio=data["fio"],
+            birthdate=data["birthdate"],
+            group=data["group"],
+            gpa=data["gpa"]
+        )
+
+    def __str__(self) -> str:
+        return f"{self.fio}, {self.group}, GPA: {self.gpa:.2f}, Возраст: {self.age()} лет"
+
+
+if __name__ == "__main__":
+    print("=== Демонстрация работы класса Student ===\n")
+    
+
+if __name__ == "__main__":
+    student = Student(
+        fio="Иванов Иван",
+        birthdate="2000-05-15",
+        group="SE-01",
+        gpa=4.5
+    )
+    
+    print(student)
+    print(student.to_dict())
+ ```
+
+ ![alt text](<images/lab08/The result of task A.png>)
+
+
+
+ 2. Модуль сериализации (serialize.py)
+ - Назначение: функции для сохранения и загрузки списков студентов в формате JSON.
+
+```python
+import json
+from typing import List
+from models import Student
+
+
+def students_to_json(students: List[Student], path: str) -> None:
+    data = [student.to_dict() for student in students]
+    
+    with open(path, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+    
+    print(f"Данные успешно сохранены в {path}")
+
+
+def students_from_json(path: str) -> List[Student]:
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        
+        if not isinstance(data, list):
+            raise ValueError("JSON должен содержать массив объектов")
+        
+        students = []
+        for i, item in enumerate(data):
+            try:
+                if not isinstance(item, dict):
+                    raise ValueError(f"Элемент {i} должен быть словарем, а не {type(item).__name__}")
+                
+                required_fields = ['fio', 'birthdate', 'group', 'gpa']
+                for field in required_fields:
+                    if field not in item:
+                        raise ValueError(f"Отсутствует обязательное поле '{field}' в элементе {i}")
+                
+                student = Student.from_dict(item)
+                students.append(student)
+                
+            except ValueError as e:
+                print(f"Ошибка валидации элемента {i}: {e}")
+                raise
+            except Exception as e:
+                print(f"Неожиданная ошибка при обработке элемента {i}: {e}")
+                raise
+        
+        print(f"Успешно загружено {len(students)} студентов из {path}")
+        return students
+        
+    except FileNotFoundError:
+        print(f"Ошибка: файл {path} не найден")
+        raise
+
+if __name__ == "__main__":
+    students = students_from_json("python_labs/data/lab08/students_input.json")
+    print("Загружено студентов:", len(students))
+    for student in students:
+        print(student)
+    
+
+    students = sorted(students, key=lambda s: s.gpa, reverse=True)
+    
+    output = "python_labs/data/lab08/students_output.json"
+    students_to_json(students, output)
+    print(f"\nСтуденты сохранены в {output}")
+```
+
+![alt text](images/lab08/Serel.png)
+
+
+### Вывод
+- Достигнутые цели:
+- Освоен @dataclass: создан эффективный класс данных с минимальным кодом
+- Реализована валидация: гарантия корректности объектов при создании
+- Создана сериализация: двустороннее преобразование объектов ↔ JSON
+- Интегрированы компоненты: полный цикл работы с данными студентов
