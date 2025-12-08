@@ -1729,3 +1729,301 @@ class Group:
 с использованием объектно-ориентированного подхода. Разработанный класс Group предоставляет полный набор 
 CRUD-операций (Create, Read, Update, Delete) для управления данными о студентах, включая расширенную 
 функциональность для поиска, фильтрации и статистического анализа.
+
+
+
+# Лабораторная работа №10
+## Структуры данных: Stack, Queue, Linked List и бенчмарки
+# Задание A (Stack и Queue)
+```python
+from collections import deque
+from typing import Any
+
+
+class Stack:
+    def __init__(self):
+        self._data: list[Any] = []
+
+    def push(self, item: Any) -> None:
+        self._data.append(item)
+
+    def pop(self) -> Any:
+        if self.is_empty():
+            raise IndexError("pop from empty stack")
+        return self._data.pop()
+
+    def peek(self) -> Any | None:
+        if self.is_empty():
+            return None
+        return self._data[-1]
+
+    def is_empty(self) -> bool:
+        return len(self._data) == 0
+
+    def __len__(self) -> int:
+        return len(self._data)
+    
+stack = Stack()
+print(f"1. Создан стек: {stack}")
+print(f"   Пустой? {stack.is_empty()}, Длина: {len(stack)}, Верх: {stack.peek()}")
+
+
+elements = [10, 20, 30, "текст", [1, 2]]
+for elem in elements:
+    stack.push(elem)
+    print(f"2. Добавили {elem}: {stack}")
+    print(f"   Верхний: {stack.peek()}, Длина: {len(stack)}")
+
+
+print("\n3. Извлекаем (LIFO порядок):")
+while not stack.is_empty():
+    item = stack.pop()
+    print(f"   Извлекли: {item}, Осталось: {len(stack)}, Верх: {stack.peek()}")
+
+print(f"\n4. Итог: {stack}, Пустой? {stack.is_empty()}")
+
+
+class Queue:
+    
+    def __init__(self):
+        self._data: deque[Any] = deque()
+
+    def enqueue(self, item: Any) -> None:
+        self._data.append(item)
+
+    def dequeue(self) -> Any:
+        if self.is_empty():
+            raise IndexError("dequeue from empty queue")
+        return self._data.popleft()
+
+    def peek(self) -> Any | None:
+        if self.is_empty():
+            return None
+        return self._data[0]
+
+    def is_empty(self) -> bool:
+        return len(self._data) == 0
+
+    def __len__(self) -> int:
+        return len(self._data)
+    
+q = Queue()
+print(f"1. Создана очередь: {q}")
+print(f"   Пустая? {q.is_empty()}, Длина: {len(q)}, Первый: {q.peek()}")
+
+elements = ["первый", "второй", "третий", 100, 200]
+for elem in elements:
+    q.enqueue(elem)
+    print(f"2. Добавили {elem}: {q}")
+    print(f"   Первый: {q.peek()}, Длина: {len(q)}")
+
+print("\n3. Извлекаем (FIFO порядок):")
+while not q.is_empty():
+    item = q.dequeue()
+    print(f"   Извлекли: {item}, Осталось: {len(q)}, Первый: {q.peek()}")
+
+print(f"\n4. Итог: {q}, Пустая? {q.is_empty()}")
+
+```
+
+![alt text](<images/lab10/Вывод  stack01.png>)
+
+![alt text](<images/lab10/Вывод stack02.png>)
+
+![alt text](<images/lab10/Вывод q01.png>)
+
+![alt text](<images/lab10/Вывод q02.png>)
+
+# Задание B + C (SinglyLinkedList и красивый вывод)
+```python
+from typing import Any, Optional, Iterator
+
+
+class Node:
+    def __init__(self, value: Any, next: Optional['Node'] = None):
+        self.value = value
+        self.next = next
+        
+    def __repr__(self) -> str:
+        return f"[{self.value}]"
+
+
+class SinglyLinkedList:
+    
+    def __init__(self):
+        self.head: Optional[Node] = None
+        self.tail: Optional[Node] = None
+        self._size: int = 0
+
+    def append(self, value: Any) -> None:
+        new_node = Node(value)
+        
+        if self.head is None:
+            self.head = new_node
+            self.tail = new_node
+        else:
+            self.tail.next = new_node
+            self.tail = new_node
+        
+        self._size += 1
+
+    def prepend(self, value: Any) -> None:
+        new_node = Node(value, next=self.head)
+        self.head = new_node
+        
+        # Если список был пуст, обновляем tail
+        if self.tail is None:
+            self.tail = new_node
+        
+        self._size += 1
+
+    def insert(self, idx: int, value: Any) -> None:
+        if idx < 0 or idx > self._size:
+            raise IndexError(f"Index {idx} out of range [0, {self._size}]")
+        
+        if idx == 0:
+            self.prepend(value)
+            return
+        
+        if idx == self._size:
+            self.append(value)
+            return
+        
+        current = self.head
+        for _ in range(idx - 1):
+            current = current.next
+        
+        new_node = Node(value, next=current.next)
+        current.next = new_node
+        self._size += 1
+
+    def remove(self, value: Any) -> bool:
+        if self.head is None:
+            return False
+        
+        if self.head.value == value:
+            self.head = self.head.next
+            if self.head is None:
+                self.tail = None
+            self._size -= 1
+            return True
+        
+        current = self.head
+        while current.next is not None:
+            if current.next.value == value:
+                current.next = current.next.next
+                if current.next is None:
+                    self.tail = current
+                self._size -= 1
+                return True
+            current = current.next
+        
+        return False
+
+    def remove_at(self, idx: int) -> Any:
+        if idx < 0 or idx >= self._size:
+            raise IndexError(f"Index {idx} out of range [0, {self._size - 1}]")
+        
+        if idx == 0:
+            value = self.head.value
+            self.head = self.head.next
+            if self.head is None:
+                self.tail = None
+            self._size -= 1
+            return value
+        
+        current = self.head
+        for _ in range(idx - 1):
+            current = current.next
+        
+        value = current.next.value
+        current.next = current.next.next
+        
+
+        if current.next is None:
+            self.tail = current
+        
+        self._size -= 1
+        return value
+
+    def __iter__(self) -> Iterator[Any]:
+        current = self.head
+        while current is not None:
+            yield current.value
+            current = current.next
+
+    def __len__(self) -> int:
+        return self._size
+
+    def __repr__(self) -> str:
+        values = list(self)
+        return f"SinglyLinkedList({values})"
+    
+    def visualize(self) -> str:
+        if self.head is None:
+            return "None"
+        
+        result_parts = []
+        current = self.head
+        
+        while current is not None:
+            result_parts.append(f"{current}") 
+            current = current.next
+        
+        result_parts.append("None")
+        return " -> ".join(result_parts)
+    
+    def __str__(self) -> str:
+        return self.visualize()
+
+
+if __name__ == "__main__":
+    lst = SinglyLinkedList()
+    
+    lst.append(1)
+    lst.append(2)
+    lst.append(3)
+    print(f"После append: {lst}")  
+    print(f"Красивый вывод: {str(lst)}")  
+    
+    lst.prepend(0)
+    print(f"\nПосле prepend: {lst}")  
+    print(f"Красивый вывод: {str(lst)}") 
+
+    lst.insert(2, 1.5)
+    print(f"\nПосле insert(2, 1.5): {lst}") 
+    print(f"Красивый вывод: {str(lst)}") 
+    
+
+    lst.remove(1.5)
+    print(f"\nПосле remove(1.5): {lst}")  
+    print(f"Красивый вывод: {str(lst)}")  
+    
+    removed = lst.remove_at(1)
+    print(f"\nУдалён элемент: {removed}") 
+    print(f"После remove_at(1): {lst}")  
+    print(f"Красивый вывод: {str(lst)}") 
+ 
+    letters = SinglyLinkedList()
+    letters.append("A")
+    letters.append("B")
+    letters.append("C")
+    print(f"\nСписок букв: {str(letters)}")  
+```
+
+![alt text](<images/lab10/Вывод  linkedlist01.png>)
+
+![alt text](<images/lab10/Вывод linkedlist02.png>)
+
+# Вывод 
+В ходе выполнения лабораторной работы были успешно реализованы и проанализированы три базовые структуры данных: стек, очередь и односвязный список.
+### Основные выводы:
+- Стек (на базе list) оптимален для задач LIFO с операциями O(1)
+- Очередь (на базе deque) эффективна для FIFO-обработки с O(1) операциями
+- Связный список демонстрирует гибкость, но проигрывает в скорости из-за накладных расходов на указатели
+
+### Практическая ценность: 
+Работа позволила не только освоить реализацию структур данных, но и развить навык анализа производительности и выбора 
+оптимальной структуры для конкретной задачи. Полученный опыт важен для написания эффективного кода и понимания 
+компромиссов при проектировании алгоритмов.
+
