@@ -165,74 +165,36 @@ class SinglyLinkedList:
         return self.visualize()
 
 
-# Пример использования
 if __name__ == "__main__":
-    # Тестирование
     lst = SinglyLinkedList()
     
-    # Добавление элементов
     lst.append(1)
     lst.append(2)
     lst.append(3)
-    print(f"После append: {lst}")  # SinglyLinkedList([1, 2, 3])
-    print(f"Красивый вывод: {str(lst)}")  # [1] -> [2] -> [3] -> None
+    print(f"После append: {lst}")  
+    print(f"Красивый вывод: {str(lst)}")  
     
-    # Добавление в начало
     lst.prepend(0)
-    print(f"\nПосле prepend: {lst}")  # SinglyLinkedList([0, 1, 2, 3])
-    print(f"Красивый вывод: {str(lst)}")  # [0] -> [1] -> [2] -> [3] -> None
-    
-    # Вставка по индексу
+    print(f"\nПосле prepend: {lst}")  
+    print(f"Красивый вывод: {str(lst)}") 
+
     lst.insert(2, 1.5)
-    print(f"\nПосле insert(2, 1.5): {lst}")  # SinglyLinkedList([0, 1, 1.5, 2, 3])
-    print(f"Красивый вывод: {str(lst)}")  # [0] -> [1] -> [1.5] -> [2] -> [3] -> None
+    print(f"\nПосле insert(2, 1.5): {lst}") 
+    print(f"Красивый вывод: {str(lst)}") 
     
-    # Удаление по значению
+
     lst.remove(1.5)
-    print(f"\nПосле remove(1.5): {lst}")  # SinglyLinkedList([0, 1, 2, 3])
-    print(f"Красивый вывод: {str(lst)}")  # [0] -> [1] -> [2] -> [3] -> None
+    print(f"\nПосле remove(1.5): {lst}")  
+    print(f"Красивый вывод: {str(lst)}")  
     
-    # Удаление по индексу
     removed = lst.remove_at(1)
-    print(f"\nУдалён элемент: {removed}")  # 1
-    print(f"После remove_at(1): {lst}")  # SinglyLinkedList([0, 2, 3])
-    print(f"Красивый вывод: {str(lst)}")  # [0] -> [2] -> [3] -> None
-    
-    # Длина списка
-    print(f"\nДлина списка: {len(lst)}")  # 3
-    
-    # Итерация
-    print("\nЭлементы списка:", end=" ")
-    for item in lst:
-        print(item, end=" ")  # 0 2 3
-    print()
-    
-    # Дополнительные примеры с разными типами данных
-    print("\n" + "="*50)
-    print("Дополнительные примеры:")
-    
-    # Пример с буквами
+    print(f"\nУдалён элемент: {removed}") 
+    print(f"После remove_at(1): {lst}")  
+    print(f"Красивый вывод: {str(lst)}") 
+ 
     letters = SinglyLinkedList()
     letters.append("A")
     letters.append("B")
     letters.append("C")
-    print(f"\nСписок букв: {str(letters)}")  # [A] -> [B] -> [C] -> None
+    print(f"\nСписок букв: {str(letters)}")  
     
-    # Пример с пустым списком
-    empty = SinglyLinkedList()
-    print(f"Пустой список: {str(empty)}")  # None
-    
-    # Пример со строками
-    words = SinglyLinkedList()
-    words.append("Hello")
-    words.append("World")
-    words.prepend("Start")
-    print(f"Список строк: {str(words)}")  # [Start] -> [Hello] -> [World] -> None
-    
-    # Пример со смешанными типами
-    mixed = SinglyLinkedList()
-    mixed.append(10)
-    mixed.append("text")
-    mixed.append([1, 2, 3])
-    mixed.append({"key": "value"})
-    print(f"Смешанный список: {str(mixed)}")  # [10] -> [text] -> [[1, 2, 3]] -> [{'key': 'value'}] -> None
