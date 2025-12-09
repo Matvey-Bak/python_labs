@@ -24,14 +24,15 @@ class SinglyLinkedList:
     def append(self, value: Any) -> None:
         """Добавить элемент в конец списка за O(1) с использованием tail."""
         new_node = Node(value)
-        
+
         if self.head is None:
             self.head = new_node
             self.tail = new_node
         else:
+            assert self.tail is not None  # Type checker: tail is not None when head is not None
             self.tail.next = new_node
             self.tail = new_node
-        
+
         self._size += 1
 
     def prepend(self, value: Any) -> None:
@@ -62,10 +63,12 @@ class SinglyLinkedList:
             return
         
         # Вставка в середину
+        assert self.head is not None  # Type checker: head is not None when inserting in middle
         current = self.head
         for _ in range(idx - 1):
+            assert current.next is not None  # Type checker: current.next is not None during traversal
             current = current.next
-        
+
         new_node = Node(value, next=current.next)
         current.next = new_node
         self._size += 1
@@ -103,7 +106,10 @@ class SinglyLinkedList:
         """Удалить элемент по индексу idx и вернуть его значение."""
         if idx < 0 or idx >= self._size:
             raise IndexError(f"Index {idx} out of range [0, {self._size - 1}]")
-        
+
+        assert self._size > 0  # Type checker: size > 0 means head is not None
+        assert self.head is not None  # Type checker: head is not None when size > 0
+
         # Удаление из начала
         if idx == 0:
             value = self.head.value
@@ -113,19 +119,21 @@ class SinglyLinkedList:
                 self.tail = None
             self._size -= 1
             return value
-        
+
         # Удаление из середины или конца
         current = self.head
         for _ in range(idx - 1):
+            assert current.next is not None  # Type checker: current.next is not None during traversal
             current = current.next
-        
+
+        assert current.next is not None  # Type checker: current.next is not None for removal
         value = current.next.value
         current.next = current.next.next
-        
+
         # Если удалили последний элемент, обновляем tail
         if current.next is None:
             self.tail = current
-        
+
         self._size -= 1
         return value
 
